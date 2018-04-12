@@ -22,15 +22,14 @@ output: html_notebook
 2018.04.12 15:00
 
 ## Log
+### 資料的欄位清理乾淨
+* 使用語法檔： `manipulate.R`
+* 檔案位置：`dataset`
+* 結果：result/ `manpower.xls`
 
-先把資料的欄位清理乾淨
-
-處理資料loop
-
-```{r}
-Sys.time()
-```
-
+## 之後處理
+* 畫圖
+  * 可以嘗試用shiny處理，但不要花太久時間
 
 # 預計流程
 
