@@ -6,7 +6,6 @@ library(tidyverse)
 library(magrittr)
 
 
-### 要 functionize 
 # Data Clean --------------------------------------------------------------
 
 
@@ -167,5 +166,64 @@ naming.fn <- function(i){
 alldf.en <- naming.fn("English")
 alldf.chi <- naming.fn("Chinese")
 
+save(alldf.en, alldf.chi, file = "/Users/hsuwei/Desktop/manpower/result/manpower.RData")
 write_excel_csv(alldf.chi, "/Users/hsuwei/Desktop/manpower/result/manpower.xlsx")
 
+
+# 繪圖 ----------------------------------------------------------------------
+
+library(tidyverse)
+library(magrittr)
+library(gridExtra)
+library(ggthemes)
+
+## age specific
+alldf.en %>%
+  select(1:5) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+ggplot(data = ., mapping = aes(x = year, y = income, color = type)) +
+  geom_line(size=1) + theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("Age-Specific Income")
+  
+
+## industry specific
+alldf.en %>%
+  select(1, 6:8) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
+  geom_line(size = 1) + 
+  theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("Industry-specific Income")
+
+## worktype specific
+par(mfrow=c(1,3))
+
+alldf.en %>%
+  select(1, 9:10) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
+  geom_line(size = 1) + 
+  theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("Worktype-Specific Income1")
+
+
+alldf.en %>%
+  select(1, 11:12) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
+  geom_line(size = 1) + 
+  theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("Worktype-Specific Income2")
+
+alldf.en %>%
+  select(1, 13:14) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
+  geom_line(size = 1) + 
+  theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("Worktype-Specific Income3")
