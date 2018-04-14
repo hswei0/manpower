@@ -213,7 +213,7 @@ ggsave("Industry-specific Income.png")
 
 ## worktype specific
 
-w1 <- alldf.en %>%
+alldf.en %>%
   select(1, 9:10) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
@@ -222,13 +222,13 @@ w1 <- alldf.en %>%
   theme_solarized() + scale_colour_solarized("blue") +
   ggtitle("Worktype-Specific Income1") +
   scale_color_discrete(name = "Worktype Groups", 
-                       labels = c("Part-time, temporary or \ndispatched workers", 
-                                  "\nNon part-time, temporary or \ndispatched workers"))
+                       labels = c("Non part-time, temporary or \ndispatched workers", 
+                                  "\nPart-time, temporary or \ndispatched workers"))
 ggsave("worktype1.png")
   
 
 
- w2 <- alldf.en %>%
+ alldf.en %>%
   select(1, 11:12) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
@@ -240,7 +240,7 @@ ggsave("worktype1.png")
  ggsave("worktype2.png")
  
    
-w3 <- alldf.en %>%
+alldf.en %>%
   select(1, 13:14) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
@@ -249,8 +249,8 @@ w3 <- alldf.en %>%
   theme_solarized() + scale_colour_solarized("blue") +
   ggtitle("Worktype-Specific Income3") +
   scale_color_discrete(name = "Worktype Groups", 
-                       labels = c("Temporary or dispatched \nworkers",
-                                  "\nNon temporary or dispatched \nworkers"))
+                       labels = c("Non temporary or dispatched \nworkers",
+                                  "\nTemporary or dispatched \nworkers"))
 ggsave("worktype3.png")
 
 
@@ -294,7 +294,7 @@ ggsave("Industry-specific Income.png")
 
 ## worktype specific
 
-w1 <- alldf.en %>%
+alldf.en %>%
   select(1, 9:10) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
@@ -303,8 +303,8 @@ w1 <- alldf.en %>%
   theme_solarized() + scale_colour_solarized("blue") +
   ggtitle("工作類型別收入") +
   scale_color_discrete(name = "工作類型別", 
-                       labels = c("部分時間、臨時性或\n人力派遣工作", 
-                                  "\n非部分時間、臨時性或\n人力派遣工作")) +
+                       labels = c("非部分時間、臨時性或\n人力派遣工作", 
+                                  "\n部分時間、臨時性或\n人力派遣工作")) +
   labs(x = "年份", y = "收入") +
   theme(axis.title.y = element_text(angle = 0) , # 设置旋转的角度 
         text = element_text(family = "黑體-繁 中黑", size = 12))
@@ -312,7 +312,7 @@ w1 <- alldf.en %>%
 ggsave("worktype1.png")
 
 
-w2 <- alldf.en %>%
+alldf.en %>%
   select(1, 11:12) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
@@ -328,7 +328,7 @@ w2 <- alldf.en %>%
 ggsave("worktype2.png")
 
 
-w3 <- alldf.en %>%
+alldf.en %>%
   select(1, 13:14) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
@@ -337,7 +337,7 @@ w3 <- alldf.en %>%
   theme_solarized() + scale_colour_solarized("blue") +
   ggtitle("工作型態別收入") +
   scale_color_discrete(name = "工作型態別", 
-                       labels = c("臨時性或人力派遣\n工作", "\n非臨時性或人力派遣\n工作")) +
+                       labels = c("非臨時性或人力派遣\n工作", "\n臨時性或人力派遣\n工作")) +
   labs(x = "年份", y = "收入") +
   theme(axis.title.y = element_text(angle = 0) , # 设置旋转的角度 
         text = element_text(family = "黑體-繁 中黑", size = 12))
