@@ -127,7 +127,7 @@ worktype.df <- making_worktype("Worktype")
 naming.fn <- function(i){
   
   agelab.en <- c("15-24 years", "25-44 years", "45-64 years", "65 years & over", "year")
-  agelab.chi <- c("１５-２４歲", "２５-４４歲", "４５-６４歲", "６５歲及以上", "年份")
+  agelab.chi <- c("15 - 24 歲", "25 - 44 歲", "45 - 64 歲", "65 歲及以上", "年份")
   
   industrylab.en <- c(
     "Agriculture, Forestry, Fishing & Animal Husbandry", 
@@ -177,6 +177,11 @@ library(magrittr)
 library(gridExtra)
 library(ggthemes)
 
+
+# 英文繪圖 --------------------------------------------------------------------
+load("/Users/hsuwei/Desktop/manpower/result/manpower.RData")
+setwd("/Users/hsuwei/Desktop/manpower/result/english figure")
+
 ## age specific
 alldf.en %>%
   select(1:5) %>%
@@ -184,7 +189,10 @@ alldf.en %>%
   mutate_at(c("year", "income"), as.numeric) %>%
 ggplot(data = ., mapping = aes(x = year, y = income, color = type)) +
   geom_line(size=1) + theme_solarized() + scale_colour_solarized("blue") +
-  ggtitle("Age-Specific Income")
+  ggtitle("Age-Specific Income") +
+  scale_color_discrete(name = "Age Groups")
+
+ggsave("Age-Specific Income.png")
   
 
 ## industry specific
@@ -195,35 +203,142 @@ alldf.en %>%
   ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
   geom_line(size = 1) + 
   theme_solarized() + scale_colour_solarized("blue") +
-  ggtitle("Industry-specific Income")
+  ggtitle("Industry-specific Income") +
+  scale_color_discrete(name = "Industry Groups", 
+                       labels=c("Agriculture, Forestry,\nFishing & Animal Husbandry", 
+                                "\nGoods-Producing Industries", 
+                                "\nServices-Producing Industries"))
+
+ggsave("Industry-specific Income.png")
 
 ## worktype specific
-par(mfrow=c(1,3))
 
-alldf.en %>%
+w1 <- alldf.en %>%
   select(1, 9:10) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
   ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
   geom_line(size = 1) + 
   theme_solarized() + scale_colour_solarized("blue") +
-  ggtitle("Worktype-Specific Income1")
+  ggtitle("Worktype-Specific Income1") +
+  scale_color_discrete(name = "Worktype Groups", 
+                       labels = c("Part-time, temporary or \ndispatched workers", 
+                                  "\nNon part-time, temporary or \ndispatched workers"))
+ggsave("worktype1.png")
+  
 
 
-alldf.en %>%
+ w2 <- alldf.en %>%
   select(1, 11:12) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
   ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
   geom_line(size = 1) + 
   theme_solarized() + scale_colour_solarized("blue") +
-  ggtitle("Worktype-Specific Income2")
-
-alldf.en %>%
+  ggtitle("Worktype-Specific Income2") +
+  scale_color_discrete(name = "Worktype Groups")
+ ggsave("worktype2.png")
+ 
+   
+w3 <- alldf.en %>%
   select(1, 13:14) %>%
   gather("type", "income", -year) %>%
   mutate_at(c("year", "income"), as.numeric) %>%
   ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
   geom_line(size = 1) + 
   theme_solarized() + scale_colour_solarized("blue") +
-  ggtitle("Worktype-Specific Income3")
+  ggtitle("Worktype-Specific Income3") +
+  scale_color_discrete(name = "Worktype Groups", 
+                       labels = c("Temporary or dispatched \nworkers",
+                                  "\nNon temporary or dispatched \nworkers"))
+ggsave("worktype3.png")
+
+
+# 中文繪圖 --------------------------------------------------------------------
+
+setwd("/Users/hsuwei/Desktop/manpower/result/chinese figure")
+
+## age specific
+alldf.en %>%
+  select(1:5) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) +
+  geom_line(size=1) + theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("年齡別收入") +
+  labs(x = "年份", y = "收入") +
+  scale_color_discrete(name = "年齡別",
+                       labels = c("15 - 24 歲", "25 - 44 歲", "45 - 64 歲", "65 歲及以上")) +
+  theme(axis.title.y = element_text(angle = 0) , # 设置旋转的角度 
+    text = element_text(family = "黑體-繁 中黑", size = 12))
+
+ggsave("Age-Specific Income.png")
+
+
+## industry specific
+alldf.en %>%
+  select(1, 6:8) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
+  geom_line(size = 1) + 
+  theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("產業別收入") +
+  scale_color_discrete(name = "產業別", 
+                       labels=c("農、林、漁、牧業", "工業", "服務業")) +
+  labs(x = "年份", y = "收入") +
+  theme(axis.title.y = element_text(angle = 0) , # 设置旋转的角度 
+        text = element_text(family = "黑體-繁 中黑", size = 12))
+
+ggsave("Industry-specific Income.png")
+
+## worktype specific
+
+w1 <- alldf.en %>%
+  select(1, 9:10) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
+  geom_line(size = 1) + 
+  theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("工作類型別收入") +
+  scale_color_discrete(name = "工作類型別", 
+                       labels = c("部分時間、臨時性或\n人力派遣工作", 
+                                  "\n非部分時間、臨時性或\n人力派遣工作")) +
+  labs(x = "年份", y = "收入") +
+  theme(axis.title.y = element_text(angle = 0) , # 设置旋转的角度 
+        text = element_text(family = "黑體-繁 中黑", size = 12))
+
+ggsave("worktype1.png")
+
+
+w2 <- alldf.en %>%
+  select(1, 11:12) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
+  geom_line(size = 1) + 
+  theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("工作時間別收入") +
+  scale_color_discrete(name = "工作時間別", 
+                       labels = c("全日時間工作", "部分時間工作")) +
+  labs(x = "年份", y = "收入") +
+  theme(axis.title.y = element_text(angle = 0) , # 设置旋转的角度 
+        text = element_text(family = "黑體-繁 中黑", size = 12))
+ggsave("worktype2.png")
+
+
+w3 <- alldf.en %>%
+  select(1, 13:14) %>%
+  gather("type", "income", -year) %>%
+  mutate_at(c("year", "income"), as.numeric) %>%
+  ggplot(data = ., mapping = aes(x = year, y = income, color = type)) + 
+  geom_line(size = 1) + 
+  theme_solarized() + scale_colour_solarized("blue") +
+  ggtitle("工作型態別收入") +
+  scale_color_discrete(name = "工作型態別", 
+                       labels = c("臨時性或人力派遣\n工作", "\n非臨時性或人力派遣\n工作")) +
+  labs(x = "年份", y = "收入") +
+  theme(axis.title.y = element_text(angle = 0) , # 设置旋转的角度 
+        text = element_text(family = "黑體-繁 中黑", size = 12))
+ggsave("worktype3.png")
