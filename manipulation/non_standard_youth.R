@@ -74,13 +74,19 @@ pickvar <- function(df, col_n) {
 }
 
 PTD.df <- map_dfc(all.lt, function(x) {
-  xx <- select(x, 3) %>%
-    slice(1:2) ## keep total, 15-24
+  xx <- select(x, 3) #%>%
+   # slice(1:2) ## keep total, 15-24
   xx
 })
 
 colnames(PTD.df) <- 2011:2017
 rownames(PTD.df) <- c("Total", "15-24 years")
+
+PTD.df %<>%
+  mutate(age = c("Total", "15-24 years", "25-44 years", "45-64 years", "65 years & over")) %>%
+  select(age, everything())
+write_csv(PTD.df, path = str_c(getwd(), "result", "allPTD.csv", sep = "/"))
+
 
 P.df <- map_dfc(all.lt, function(x) {
   xx <- select(x, 6) %>% #part time
@@ -154,18 +160,45 @@ mtable <- ifelse(y_range < 104, "mtable18", "mtable17")
 all.lt <- map2(y_range, mtable, download_fn)
 names(all.lt) <- str_c(2011:2017, "major_job")
 
-to.prop <- function(df1) {
-  aa <- map_dfc(df1[2: 8], function(x){
-    round(x/x[1] * 100, digits = 2)
-  }) %>%
-    #bind_cols(df1[1], .) %>%
-    select(3, 6, 7) %>%
-    slice(2)
-  return(aa)
-}
+x <- all.lt[[2]]
 
-xx <- map_dfr(all.lt, to.prop)
-names(xx) <- varnames[c(3, 6, 7)]
+youth_nonstandard <- map_dfr(all.lt[1: 7], function(x){
+names(x) <- varnames
+x2 <- x %>%
+  select(1, 3, 6, 7) %>%
+  slice(-1) %>%
+  gather(key = "type", value = "man", -1)
+
+x2 %>% 
+  group_by(type) %>%
+  mutate(prop = round(man / sum(man), 2)) %>%
+  select(-man) %>%
+  spread(key = "type", value = prop) %>%
+  slice(1)
+}) %>%
+  mutate("　Item" = 2011: 2017)
+
+write_csv(youth_nonstandard, path = str_c(getwd(), "result", "y_nonstandard.csv", sep = "/"))
+
+allage_nonstandard <- map_dfr(all.lt[1: 7], function(x){
+  names(x) <- varnames
+  x2 <- x %>%
+    select(1, 3, 6, 7) %>%
+    slice(-1) %>%
+    gather(key = "type", value = "man", -1)
+  
+  x2 %>% 
+    group_by(type) %>%
+    mutate(prop = round(man / sum(man), 2)) %>%
+    select(-man) %>%
+    slice(1:4) %>%
+    filter(type == "Part-time,\ntemporary or\ndispatched workers") %>%
+    spread(key = "　Item", value = prop) 
+}) %>%
+  ungroup(type) %>%
+  mutate(type = 2011 : 2017)
+write_csv(allage_nonstandard, path = str_c(getwd(), "result", "all_nonstandard.csv", sep = "/"))
+
 
 out2 <- xx%>%
   mutate(year = 2011:2017) %>%
